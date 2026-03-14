@@ -2,9 +2,17 @@ const signupForm = document.getElementById("signupForm");
 const signinForm = document.getElementById("signinForm");
 const statusEl = document.getElementById("authStatus");
 
+function getBaseUrl() {
+  if (window.location.origin && window.location.origin !== "null") {
+    return window.location.origin;
+  }
+  return "http://localhost:3000";
+}
+
 async function authRequest(action, payload) {
   try {
-    const response = await fetch(`/api/auth?action=${action}`, {
+    const base = getBaseUrl();
+    const response = await fetch(`${base}/api/auth?action=${action}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
