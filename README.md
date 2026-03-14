@@ -1,12 +1,20 @@
 # StudySprint (Gemini-powered)
 
-A web app that signs in a student, collects course details + files, and calls the Gemini API to generate slide-style lessons with step quizzes, a final quiz, and an evaluation rubric. Includes real auth, SQLite persistence, progress tracking, and file attachments sent directly to Gemini.
+A web app that signs in a student, collects course details + files, and calls the Gemini API to generate slide-style lessons with step quizzes. Built for Vercel serverless using Supabase.
 
-## Quick start
-1. Install dependencies: `npm install`
-2. Copy `.env.example` to `.env` and fill in values.
-3. Run the server: `npm run dev`
-4. Open `http://localhost:3000/index.html`
+## Vercel deployment (serverless)
+1. Create a Supabase project.
+2. Run the SQL in `supabase.sql` to create tables, RLS policies, and storage bucket.
+3. Set Vercel environment variables:
+   - `SUPABASE_URL`
+   - `SUPABASE_ANON_KEY`
+   - `SUPABASE_JWT_SECRET`
+   - `GEMINI_API_KEY`
+   - `GEMINI_MODEL` (optional)
+4. Deploy to Vercel.
+
+## Health check
+- `GET /api/health` verifies Supabase + Gemini.
 
 ## Pages
 - Home: `/index.html`
@@ -17,14 +25,7 @@ A web app that signs in a student, collects course details + files, and calls th
 - Lesson player: `/lesson.html?id=COURSE_ID`
 - Final quiz: `/final.html?id=COURSE_ID`
 
-## Environment variables
-- `GEMINI_API_KEY` (required)
-- `GEMINI_MODEL` (optional, default `gemini-2.5-flash`)
-- `GEMINI_MAX_TOKENS` (optional, default `8192`)
-- `SESSION_SECRET` (required for production)
-- `DB_PATH` (optional, default `./data/app.db`)
-
 ## Notes
-- Uploaded files are sent directly to Gemini as attachments, no local parsing.
-- The lesson player presents one slide at a time, then a quiz before continuing.
-- Progress is saved per course and resumes at the last slide/quiz.
+- File uploads are sent to Gemini and stored in Supabase Storage (`course-files`).
+- Quizzes are graded by Gemini via `/api/grade`.
+- Final quiz can be regenerated multiple times.

@@ -3,17 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "type": "commonjs",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
-  },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "connect-sqlite3": "^0.9.13",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
-    "multer": "^1.4.5-lts.1",
-    "sqlite3": "^5.1.7"
+    "@supabase/supabase-js": "^2.49.1",
+    "busboy": "^1.6.0",
+    "cookie": "^0.6.0",
+    "jose": "^5.6.3"
   }
 }
