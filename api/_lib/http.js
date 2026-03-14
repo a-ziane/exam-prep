@@ -10,13 +10,13 @@ function getCookies(req) {
   return cookie.parse(req.headers.cookie || "");
 }
 
-function setAuthCookies(res, session) {
+function setAuthCookies(res, session, secure = true) {
   const access = session?.access_token;
   const refresh = session?.refresh_token;
   const opts = {
     httpOnly: true,
     sameSite: "Lax",
-    secure: true,
+    secure,
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
   };
@@ -29,11 +29,11 @@ function setAuthCookies(res, session) {
   );
 }
 
-function clearAuthCookies(res) {
+function clearAuthCookies(res, secure = true) {
   const opts = {
     httpOnly: true,
     sameSite: "Lax",
-    secure: true,
+    secure,
     path: "/",
     maxAge: 0,
   };

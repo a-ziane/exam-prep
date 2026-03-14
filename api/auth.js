@@ -4,6 +4,7 @@ const { requireUser } = require("./_lib/auth");
 
 module.exports = async (req, res) => {
   const action = req.query.action;
+  const isSecure = (req.headers["x-forwarded-proto"] || "").includes("https");
 
   if (req.method === "POST" && action === "signup") {
     try {
@@ -19,7 +20,7 @@ module.exports = async (req, res) => {
         options: { data: { name } },
       });
       if (error) return json(res, 400, { error: error.message });
-      if (data.session) setAuthCookies(res, data.session);
+      if (data.session) setAuthCookies(res, data.session, isSecure);
       return json(res, 200, { user: data.user });
     } catch (err) {
       return json(res, 500, { error: "Server error", detail: err.message });
@@ -36,7 +37,7 @@ module.exports = async (req, res) => {
       const supabase = getAnonClient();
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) return json(res, 401, { error: error.message });
-      if (data.session) setAuthCookies(res, data.session);
+      if (data.session) setAuthCookies(res, data.session, isSecure);
       return json(res, 200, { user: data.user });
     } catch (err) {
       return json(res, 500, { error: "Server error", detail: err.message });
@@ -44,7 +45,7 @@ module.exports = async (req, res) => {
   }
 
   if (req.method === "POST" && action === "logout") {
-    clearAuthCookies(res);
+    clearAuthCookies(res, isSecure);
     return json(res, 200, { ok: true });
   }
 
