@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudySprint | Sign in</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="glow"></div>
+    <main class="page auth-page">
+      <header class="auth-header">
+        <a class="brand" href="index.html">StudySprint</a>
+        <a class="ghost" href="signup.html">Create account</a>
+      </header>
+
+      <section class="card auth-card">
+        <div class="card-header">
+          <h2>Welcome back</h2>
+          <p>Sign in to continue where you left off.</p>
+        </div>
+        <form id="signinForm" class="form-grid single">
+          <label>
+            Email
+            <input type="email" name="email" placeholder="alex@email.com" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" placeholder="Your password" required />
+          </label>
+          <button class="primary" type="submit">Sign in</button>
+          <p id="authStatus" class="hint"></p>
+        </form>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>StudySprint · Welcome back.</p>
+    </footer>
+    <script src="auth.js"></script>
+  </body>
+</html>

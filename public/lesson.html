@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudySprint | Lesson Player</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <a class="brand" href="dashboard.html">Back to dashboard</a>
+        <div class="dashboard-actions">
+          <button id="signoutBtn" class="ghost">Sign out</button>
+        </div>
+      </header>
+
+      <section class="card" id="lessonArea">
+        <div class="card-header">
+          <h2>Lesson player</h2>
+          <p>Learn one concept, take a quiz, then continue.</p>
+        </div>
+        <div class="lesson-nav">
+          <button id="firstLessonBtn" class="ghost">First lesson</button>
+          <button id="prevLessonBtn" class="ghost">Previous lesson</button>
+          <div id="lessonIndicator" class="hint lesson-indicator"></div>
+          <button id="nextLessonBtn" class="ghost">Next lesson</button>
+        </div>
+        <div id="lessonStage"></div>
+        <div class="lesson-controls">
+          <button id="prevBtn" class="ghost">Back</button>
+          <button id="nextBtn" class="primary">Next</button>
+        </div>
+        <div class="final-center">
+          <a id="goFinalQuiz" class="primary">Go to final quiz</a>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>StudySprint · Keep going, one concept at a time.</p>
+    </footer>
+    <script src="lesson.js"></script>
+  </body>
+</html>

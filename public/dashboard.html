@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudySprint | Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="glow"></div>
+    <main class="page">
+      <header class="topbar">
+        <a class="brand" href="index.html">StudySprint</a>
+        <div class="dashboard-actions">
+          <button id="signoutBtn" class="ghost">Sign out</button>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Your dashboard</h2>
+          <p>Pick up where you left off or create a new course.</p>
+        </div>
+        <div class="dashboard-actions">
+          <a class="primary" href="course.html?new=1">Create new course</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Your courses</h2>
+          <p id="courseStatus" class="hint"></p>
+        </div>
+        <div id="courseList" class="course-list"></div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>StudySprint · Manage your learning path.</p>
+    </footer>
+    <script src="dashboard.js"></script>
+  </body>
+</html>

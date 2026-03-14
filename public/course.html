@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudySprint | Course Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="glow"></div>
+    <main class="page">
+      <header class="topbar">
+        <a class="brand" href="dashboard.html">Back to dashboard</a>
+        <div class="dashboard-actions">
+          <button id="signoutBtn" class="ghost">Sign out</button>
+        </div>
+      </header>
+
+      <section class="card" id="courseBuilder">
+        <div class="card-header">
+          <h2 id="courseTitle">Create course</h2>
+          <p>Add or update materials to regenerate the guide.</p>
+        </div>
+        <form id="courseForm" class="form-grid">
+          <label>
+            Course name
+            <input type="text" name="courseName" placeholder="Physics: Mechanics" required />
+          </label>
+          <label>
+            Course type
+            <select name="courseType" required>
+              <option value="Math">Math</option>
+              <option value="Physics">Physics</option>
+              <option value="Writing">Writing</option>
+              <option value="Biology">Biology</option>
+              <option value="Sociology">Sociology</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Other" selected>Other</option>
+            </select>
+          </label>
+          <label class="full">
+            Course description
+            <textarea name="description" rows="4" placeholder="Topics, goals, and pain points."></textarea>
+          </label>
+          <label class="full">
+            Add files (PDF, DOCX, notes)
+            <input type="file" id="courseFiles" multiple />
+            <small class="hint">Files are sent directly to Gemini as attachments.</small>
+          </label>
+          <label class="full">
+            Extra info (you can add more later)
+            <textarea name="extraNotes" rows="3" placeholder="Add new info to regenerate the guide."></textarea>
+          </label>
+          <button class="primary" type="submit">Generate study guide</button>
+          <p id="status" class="hint"></p>
+        </form>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>StudySprint · Build a custom study plan.</p>
+    </footer>
+    <script src="course.js"></script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudySprint | Create account</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="glow"></div>
+    <main class="page auth-page">
+      <header class="auth-header">
+        <a class="brand" href="index.html">StudySprint</a>
+        <a class="ghost" href="signin.html">Sign in</a>
+      </header>
+
+      <section class="card auth-card">
+        <div class="card-header">
+          <h2>Create your account</h2>
+          <p>Save courses and resume learning anytime.</p>
+        </div>
+        <form id="signupForm" class="form-grid single">
+          <label>
+            Full name
+            <input type="text" name="name" placeholder="Alex Rivera" required />
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" placeholder="alex@email.com" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" placeholder="Minimum 8 characters" required />
+          </label>
+          <button class="primary" type="submit">Create account</button>
+          <p id="authStatus" class="hint"></p>
+        </form>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>StudySprint · Secure sign-up.</p>
+    </footer>
+    <script src="auth.js"></script>
+  </body>
+</html>
