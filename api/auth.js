@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
       });
       if (error) return json(res, 400, { error: error.message });
       if (data.session) setAuthCookies(res, data.session, isSecure);
-      return json(res, 200, { user: data.user });
+      return json(res, 200, { user: data.user, session: data.session });
     } catch (err) {
       return json(res, 500, { error: "Server error", detail: err.message });
     }
@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) return json(res, 401, { error: error.message });
       if (data.session) setAuthCookies(res, data.session, isSecure);
-      return json(res, 200, { user: data.user });
+      return json(res, 200, { user: data.user, session: data.session });
     } catch (err) {
       return json(res, 500, { error: "Server error", detail: err.message });
     }

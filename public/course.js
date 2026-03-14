@@ -1,3 +1,5 @@
+import { apiFetch, clearAuthToken } from "./api.js";
+
 const courseForm = document.getElementById("courseForm");
 const fileInput = document.getElementById("courseFiles");
 const statusEl = document.getElementById("status");
@@ -17,7 +19,8 @@ if (params.get("focus")) {
 }
 
 signoutBtn.addEventListener("click", async () => {
-  await fetch("/api/auth?action=logout", { method: "POST" });
+  await apiFetch("/api/auth?action=logout", { method: "POST" });
+  clearAuthToken();
   window.location.href = "signin.html";
 });
 
@@ -28,7 +31,7 @@ function setStatus(message, tone = "info") {
 
 async function loadCourse() {
   if (!courseId) return;
-  const courseRes = await fetch(`/api/courses?action=one&id=${courseId}`);
+  const courseRes = await apiFetch(`/api/courses?action=one&id=${courseId}`);
   if (courseRes.status === 401) return (window.location.href = "signin.html");
   const courseData = await courseRes.json();
   if (courseData.course) {
@@ -57,7 +60,7 @@ courseForm.addEventListener("submit", async (event) => {
   }
 
   try {
-    const response = await fetch("/api/ai?action=generate", {
+    const response = await apiFetch("/api/ai?action=generate", {
       method: "POST",
       body: payload,
     });

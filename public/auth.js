@@ -20,6 +20,9 @@ async function authRequest(action, payload) {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Auth failed");
 
+    if (data.session?.access_token) {
+      localStorage.setItem("sb_access_token", data.session.access_token);
+    }
     window.location.href = "dashboard.html";
   } catch (error) {
     if (statusEl) statusEl.textContent = error.message;

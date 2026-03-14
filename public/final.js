@@ -1,3 +1,5 @@
+import { apiFetch, clearAuthToken } from "./api.js";
+
 const finalQuizEl = document.getElementById("finalQuiz");
 const regenFinalBtn = document.getElementById("regenFinal");
 const signoutBtn = document.getElementById("signoutBtn");
@@ -14,7 +16,8 @@ if (params.get("id")) {
 backToLesson.href = courseId ? `lesson.html?id=${courseId}` : "lesson.html";
 
 signoutBtn.addEventListener("click", async () => {
-  await fetch("/api/auth?action=logout", { method: "POST" });
+  await apiFetch("/api/auth?action=logout", { method: "POST" });
+  clearAuthToken();
   window.location.href = "signin.html";
 });
 
@@ -23,7 +26,7 @@ regenFinalBtn.addEventListener("click", async () => {
   regenFinalBtn.disabled = true;
   regenFinalBtn.textContent = "Regenerating...";
   try {
-    const response = await fetch(`/api/ai?action=finalQuizRegen&courseId=${courseId}`, { method: "POST" });
+    const response = await apiFetch(`/api/ai?action=finalQuizRegen&courseId=${courseId}`, { method: "POST" });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Failed to regenerate");
     guide.finalQuiz = data.finalQuiz;
@@ -37,7 +40,7 @@ regenFinalBtn.addEventListener("click", async () => {
 });
 
 async function gradeAnswer(item, userAnswer) {
-  const response = await fetch("/api/ai?action=grade", {
+  const response = await apiFetch("/api/ai?action=grade", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -142,7 +145,7 @@ async function loadFinalQuiz() {
     return;
   }
 
-  const guideRes = await fetch(`/api/courses?action=guide&id=${courseId}`);
+  const guideRes = await apiFetch(`/api/courses?action=guide&id=${courseId}`);
   if (guideRes.status === 401) return (window.location.href = "signin.html");
 
   if (guideRes.ok) {

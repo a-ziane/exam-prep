@@ -1,15 +1,18 @@
+import { apiFetch, clearAuthToken } from "./api.js";
+
 const courseList = document.getElementById("courseList");
 const courseStatus = document.getElementById("courseStatus");
 const signoutBtn = document.getElementById("signoutBtn");
 
 signoutBtn.addEventListener("click", async () => {
-  await fetch("/api/auth?action=logout", { method: "POST" });
+  await apiFetch("/api/auth?action=logout", { method: "POST" });
+  clearAuthToken();
   window.location.href = "signin.html";
 });
 
 async function loadCourses() {
   try {
-    const response = await fetch("/api/courses?action=list");
+    const response = await apiFetch("/api/courses?action=list");
     if (response.status === 401) {
       window.location.href = "signin.html";
       return;
@@ -49,7 +52,7 @@ async function loadCourses() {
       btn.addEventListener("click", async () => {
         const id = btn.getAttribute("data-delete");
         if (!confirm("Delete this course? This cannot be undone.")) return;
-        await fetch(`/api/courses?action=delete&id=${id}`, { method: "DELETE" });
+        await apiFetch(`/api/courses?action=delete&id=${id}`, { method: "DELETE" });
         loadCourses();
       });
     });

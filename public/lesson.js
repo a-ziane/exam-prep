@@ -1,3 +1,5 @@
+import { apiFetch, clearAuthToken } from "./api.js";
+
 const lessonStage = document.getElementById("lessonStage");
 const nextBtn = document.getElementById("nextBtn");
 const prevBtn = document.getElementById("prevBtn");
@@ -25,7 +27,8 @@ if (goFinalQuiz) {
 }
 
 signoutBtn.addEventListener("click", async () => {
-  await fetch("/api/auth?action=logout", { method: "POST" });
+  await apiFetch("/api/auth?action=logout", { method: "POST" });
+  clearAuthToken();
   window.location.href = "signin.html";
 });
 
@@ -106,7 +109,7 @@ firstLessonBtn?.addEventListener("click", async () => {
 
 async function saveProgress() {
   if (!courseId) return;
-  await fetch("/api/courses?action=progress", {
+  await apiFetch("/api/courses?action=progress", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -256,7 +259,7 @@ function escapeHtml(text) {
 }
 
 async function gradeAnswer(item, userAnswer) {
-  const response = await fetch("/api/ai?action=grade", {
+  const response = await apiFetch("/api/ai?action=grade", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -301,7 +304,7 @@ async function loadLesson() {
     return;
   }
 
-  const guideRes = await fetch(`/api/courses?action=guide&id=${courseId}`);
+  const guideRes = await apiFetch(`/api/courses?action=guide&id=${courseId}`);
   if (guideRes.status === 401) return (window.location.href = "signin.html");
 
   if (guideRes.ok) {
@@ -309,7 +312,7 @@ async function loadLesson() {
     guide = guideData.guide?.json_text ? JSON.parse(guideData.guide.json_text) : null;
   }
 
-  const progressRes = await fetch(`/api/courses?action=progress&courseId=${courseId}`);
+  const progressRes = await apiFetch(`/api/courses?action=progress&courseId=${courseId}`);
   if (progressRes.ok) {
     const progressData = await progressRes.json();
     const last = (progressData.progress || []).sort((a, b) => b.lesson_index - a.lesson_index)[0];
