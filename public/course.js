@@ -9,7 +9,7 @@ let focusNotes = "";
 
 const params = new URLSearchParams(window.location.search);
 if (params.get("id")) {
-  courseId = Number(params.get("id"));
+  courseId = params.get("id");
   courseTitle.textContent = "Update course";
 }
 if (params.get("focus")) {
@@ -17,18 +17,18 @@ if (params.get("focus")) {
 }
 
 signoutBtn.addEventListener("click", async () => {
-  await fetch("/api/logout", { method: "POST" });
+  await fetch("/api/auth?action=logout", { method: "POST" });
   window.location.href = "signin.html";
 });
 
 function setStatus(message, tone = "info") {
   statusEl.textContent = message;
-  statusEl.style.color = tone === "error" ? "#ffb199" : "#a7b0c7";
+  statusEl.style.color = tone === "error" ? "#b4232b" : "#5f6b7a";
 }
 
 async function loadCourse() {
   if (!courseId) return;
-  const courseRes = await fetch(`/api/courses/${courseId}`);
+  const courseRes = await fetch(`/api/courses?action=one&id=${courseId}`);
   if (courseRes.status === 401) return (window.location.href = "signin.html");
   const courseData = await courseRes.json();
   if (courseData.course) {
@@ -57,7 +57,7 @@ courseForm.addEventListener("submit", async (event) => {
   }
 
   try {
-    const response = await fetch("/api/generate", {
+    const response = await fetch("/api/ai?action=generate", {
       method: "POST",
       body: payload,
     });

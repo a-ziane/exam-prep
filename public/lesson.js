@@ -17,7 +17,7 @@ let results = {};
 
 const params = new URLSearchParams(window.location.search);
 if (params.get("id")) {
-  courseId = Number(params.get("id"));
+  courseId = params.get("id");
 }
 
 if (goFinalQuiz) {
@@ -25,7 +25,7 @@ if (goFinalQuiz) {
 }
 
 signoutBtn.addEventListener("click", async () => {
-  await fetch("/api/logout", { method: "POST" });
+  await fetch("/api/auth?action=logout", { method: "POST" });
   window.location.href = "signin.html";
 });
 
@@ -106,7 +106,7 @@ firstLessonBtn?.addEventListener("click", async () => {
 
 async function saveProgress() {
   if (!courseId) return;
-  await fetch("/api/progress", {
+  await fetch("/api/courses?action=progress", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -134,7 +134,7 @@ function renderLesson() {
   }
 
   if (stage === "final") {
-    lessonStage.innerHTML = `<p class="hint">You reached the final quiz. Scroll to the evaluation section.</p>`;
+    lessonStage.innerHTML = `<p class="hint">You reached the final quiz. Click "Go to final quiz" below.</p>`;
     return;
   }
 
@@ -177,7 +177,7 @@ function renderLesson() {
                 : [];
             const choiceHtml = choices
               .map(
-                (choice, cIdx) => `
+                (choice) => `
                   <label class="choice">
                     <input type="radio" name="q${idx}" value="${escapeHtml(choice)}" />
                     <span>${escapeHtml(choice)}</span>
@@ -246,23 +246,6 @@ function renderLesson() {
   }
 }
 
-function renderEvaluation() {}
-
-function safeParseJSON(text) {
-  if (!text) return null;
-  const fenced = text.match(/```json\s*([\s\S]*?)```/i);
-  const raw = fenced ? fenced[1] : text;
-  const start = raw.indexOf("{");
-  const end = raw.lastIndexOf("}");
-  if (start === -1 || end === -1) return null;
-  const slice = raw.slice(start, end + 1);
-  try {
-    return JSON.parse(slice);
-  } catch (err) {
-    return null;
-  }
-}
-
 function escapeHtml(text) {
   return String(text || "")
     .replaceAll("&", "&amp;")
@@ -270,6 +253,23 @@ function escapeHtml(text) {
     .replaceAll(">", "&gt;")
     .replaceAll("\"", "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+async function gradeAnswer(item, userAnswer) {
+  const response = await fetch("/api/ai?action=grade", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      question: item.question,
+      type: item.type,
+      choices: item.choices || [],
+      answerKey: item.answer,
+      userAnswer,
+    }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || "Grading failed");
+  return data;
 }
 
 function loadResults() {
@@ -295,55 +295,21 @@ function recordResult(entry) {
   saveResults();
 }
 
-function buildFocusNotes() {
-  const wrong = Object.values(results).filter((r) => !r.correct);
-  if (!wrong.length) return "No weak areas detected. Create deeper practice for the whole course.";
-  const grouped = new Map();
-  wrong.forEach((r) => {
-    const key = r.lessonTitle;
-    if (!grouped.has(key)) grouped.set(key, []);
-    grouped.get(key).push(r.question);
-  });
-  return Array.from(grouped.entries())
-    .map(([lesson, qs]) => `${lesson}: ${qs.join(" | ")}`)
-    .join("\n");
-}
-
-function renderScoreSummary() {}
-
-async function gradeAnswer(item, userAnswer) {
-  const response = await fetch("/api/grade", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      question: item.question,
-      type: item.type,
-      choices: item.choices || [],
-      answerKey: item.answer,
-      userAnswer,
-    }),
-  });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Grading failed");
-  return data;
-}
-
 async function loadLesson() {
   if (!courseId) {
     lessonStage.innerHTML = `<p class="hint">No course selected.</p>`;
     return;
   }
 
-  const guideRes = await fetch(`/api/courses/${courseId}/guide`);
+  const guideRes = await fetch(`/api/courses?action=guide&id=${courseId}`);
   if (guideRes.status === 401) return (window.location.href = "signin.html");
 
   if (guideRes.ok) {
     const guideData = await guideRes.json();
-    const jsonText = guideData.guide?.json_text || "";
-    guide = jsonText ? JSON.parse(jsonText) : safeParseJSON(guideData.guide?.raw_text || "");
+    guide = guideData.guide?.json_text ? JSON.parse(guideData.guide.json_text) : null;
   }
 
-  const progressRes = await fetch(`/api/progress/${courseId}`);
+  const progressRes = await fetch(`/api/courses?action=progress&courseId=${courseId}`);
   if (progressRes.ok) {
     const progressData = await progressRes.json();
     const last = (progressData.progress || []).sort((a, b) => b.lesson_index - a.lesson_index)[0];

@@ -2,9 +2,9 @@ const signupForm = document.getElementById("signupForm");
 const signinForm = document.getElementById("signinForm");
 const statusEl = document.getElementById("authStatus");
 
-async function authRequest(url, payload) {
+async function authRequest(action, payload) {
   try {
-    const response = await fetch(url, {
+    const response = await fetch(`/api/auth?action=${action}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -23,7 +23,7 @@ if (signupForm) {
     event.preventDefault();
     const formData = new FormData(signupForm);
     const payload = Object.fromEntries(formData.entries());
-    await authRequest("/api/signup", payload);
+    await authRequest("signup", payload);
   });
 }
 
@@ -32,6 +32,6 @@ if (signinForm) {
     event.preventDefault();
     const formData = new FormData(signinForm);
     const payload = Object.fromEntries(formData.entries());
-    await authRequest("/api/login", payload);
+    await authRequest("login", payload);
   });
 }

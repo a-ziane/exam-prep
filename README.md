@@ -13,8 +13,14 @@ A web app that signs in a student, collects course details + files, and calls th
    - `GEMINI_MODEL` (optional)
 4. Deploy to Vercel.
 
-## Health check
-- `GET /api/health` verifies Supabase + Gemini.
+## API endpoints (Hobby plan safe)
+- `POST /api/auth?action=signup|login|logout`
+- `GET /api/auth?action=me`
+- `GET /api/courses?action=list|one|guide|progress`
+- `POST /api/courses?action=progress`
+- `DELETE /api/courses?action=delete&id=COURSE_ID`
+- `POST /api/ai?action=generate|grade|finalQuizRegen`
+- `GET /api/health`
 
 ## Pages
 - Home: `/index.html`
@@ -27,5 +33,5 @@ A web app that signs in a student, collects course details + files, and calls th
 
 ## Notes
 - File uploads are sent to Gemini and stored in Supabase Storage (`course-files`).
-- Quizzes are graded by Gemini via `/api/grade`.
+- Quizzes are graded by Gemini via `/api/ai?action=grade`.
 - Final quiz can be regenerated multiple times.
