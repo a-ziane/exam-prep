@@ -18,7 +18,9 @@ async function verifyAccessToken(accessToken) {
 
 async function requireUser(req, res) {
   const cookies = getCookies(req);
-  const accessToken = cookies.sb_access_token;
+  const header = req.headers.authorization || "";
+  const bearer = header.startsWith("Bearer ") ? header.slice(7) : "";
+  const accessToken = bearer || cookies.sb_access_token;
   if (!accessToken) {
     json(res, 401, { error: "Not authenticated" });
     return null;
